@@ -1,0 +1,55 @@
+﻿@import url('TicketInfoDesign.css');
+body {
+    background-size: 200vh;
+    box-sizing: border-box;
+    height: 100vh;
+    width: 100vw;
+    font-family: 'Raleway', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.form {
+    margin-top: 50px;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.header_container {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-end;
+}
+
+.Container {
+    margin-left: 10px;
+}
+
+.sub_title {
+    color: #7abe96;
+    margin: 0px;
+}
+
+.header {
+    margin: 0px;
+}
+
+.img {
+    height: 90px;
+}
+
+.logo {
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+.description {
+    flex-grow: 2;
+}body {
+}
