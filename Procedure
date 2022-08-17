@@ -1,0 +1,54 @@
+create procedure day_to_close(INOUT selectedNode varchar(20))
+BEGIN
+	DECLARE finished INTEGER DEFAULT 0;
+	DECLARE temp_table varchar(100) DEFAULT "";
+	--declare cursor for temporary table
+
+	DECLARE cur CURSOR FOR
+		SELECT renegotiated_date,closed_date,processed_date,current_date FROM ticketinfo where 
+		ticketinfo.member_code='OOCAONE01';
+
+	--declare NOT FOUND handler
+	DECLARE CONTINUE HANDLER
+	FOR NOT FOUND SET finished = 1;
+	
+	OPEN cur
+	getNode: LOOP
+		FETCH cur into temp_table;
+		IF finished = 1 THEN
+			LEAVE getNode;
+		END IF;
+		IF renegotiated_date = NULL THEN
+			set day_to_close = DATEDIFF(processed_date,closed_date);
+		ELSEIF renegotiated_date != NULL THEN
+			set day_to_close= DATEDIFF(renegotiated_date,closed_date);
+		ELSEIF (renegotiated_date = NULL AND closed_date = NULL) THEN
+			set day_to_close= DATEDIFF(processed_date,current_date);
+		ELSE
+			SET "unknown error" AS 'ERROR';
+		END IF;
+	END LOOP getNode;
+	CLOSE cur
+END;
+
+
+CREATE PROCEDURE Time_to_respond(INOUT selectedNode varchar(20))
+BEGIN
+	DECLARE time INT;
+	SELECT day_to_close into time FROM ticketinfo
+	where ticketinfo.member_code = selectedNode;
+	
+	CASE time
+		WHEN day_to_close < 5 THEN
+			SET ticketinfo.time = "0-5";
+			SET ticketinfo.Compliance = 1;
+		WHEN day_to_close < 11 THEN
+			SET ticketinfo.time = "5-10";
+		WHEN day_to_close < 1 THEN
+			SET ticketinfo.time = "11-15";
+		WHEN day_to_close > 16 THEN
+			SET ticketinfo.time = "15+";
+		ELSE
+			SET ticketinfo.time= "";
+	END CASE;
+END;
