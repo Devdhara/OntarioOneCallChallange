@@ -11,25 +11,62 @@ namespace OntarioOneCallChallange
     public partial class TincketInfo : System.Web.UI.Page
     {
         SqlConnection con = new SqlConnection(@"Data Source=localhost;Initial Catalog=OntarioOneCall;Integrated Security=True");
-        SqlCommand cmd_parent, cmd_child;
-        SqlDataAdapter adp_parent, adp_child;
+        SqlCommand cmd_parent, cmd_child,cmd_procedure;
+        SqlDataAdapter adp_parent, adp_child,adp_procedure;
         TreeNode master_node, member_node;
+        public void Page_Load(object sender, EventArgs e)
+        {
 
+            
+            lbl_CurrentSelection.Visible = false;
+        }
         protected void TreeView1_TreeNodeCheckChanged(object sender, TreeNodeEventArgs e)
         {
-            if (TreeView1.CheckedNodes.Count > 0)
+           
+           
+        }   
+        public void FillGrid(string selectedNodes)
+        {
+            DataTable dt = new DataTable();
+            cmd_procedure = new SqlCommand("day_to_close('" + selectedNodes + "')", con);
+            cmd_procedure.CommandType = CommandType.StoredProcedure;
+            adp_procedure = new SqlDataAdapter(cmd_procedure);
+            adp_procedure.Fill(dt);
+            GridView1.DataSource = dt;
+            GridView1.DataBind();
+
+            con.Close();
+        }
+
+        protected void TreeView1_SelectedNodeChanged(object sender, EventArgs e)
+        {
+            var selectedNodes = new List<string>();
+            if (TreeView1.SelectedNode.Checked)
             {
 
-                foreach (TreeNode node in TreeView1.CheckedNodes)
+                if (TreeView1.CheckedNodes.Count > 0)
                 {
-                    lbl_ParentChild.Text = node.Text;
+                    lbl_CurrentSelection.Visible = true;
+                    lbl_ParentChild.Visible = true;
+                    foreach (TreeNode node in TreeView1.CheckedNodes)
+                    {
+                        selectedNodes.Add(node.Text.ToString());
+                    }
+
                 }
+                else
+                {
+                    selectedNodes.Remove(TreeView1.SelectedNode.Checked.ToString());
+                    lbl_CurrentSelection.Text = "";
+                }
+
             }
-            else
+
+            foreach (var node in selectedNodes)
             {
-                //CheckedNodes.Remove(e.Node.DataPath.ToString());
-                //lbl_NodeDisplay.Text = "";
+                lbl_CurrentSelection.Text += "," + node;
             }
+            FillGrid(TreeView1.SelectedNode.Checked.ToString());
         }
 
         protected void btn_populateTree_Click(object sender, EventArgs e)
@@ -86,9 +123,6 @@ namespace OntarioOneCallChallange
         }
 
        
-        protected void Page_Load(object sender, EventArgs e)
-        {
-
-        }
+       
     }
 }

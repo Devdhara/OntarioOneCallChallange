@@ -15,14 +15,14 @@
                 <asp:Label ID="lbl_ParentChild" runat="server" Text="Label"></asp:Label></span></p>
 
             <p class="sub_title">Current Selection: <span>
-                <asp:Label ID="lbl_CurrentSelection" runat="server" Text="Label"></asp:Label></span></p>
+                <asp:Label ID="lbl_CurrentSelection" runat="server"></asp:Label></span></p>
         </div>
     </div>
 
     <form class="form" id="form1" runat="server">
         <div class="Container">
             <div class="">
-                <asp:TreeView ID="TreeView1" runat="server" OnTreeNodeCheckChanged="TreeView1_TreeNodeCheckChanged" ShowCheckBoxes="Leaf"></asp:TreeView>
+                <asp:TreeView ID="TreeView1" runat="server" OnTreeNodeCheckChanged="TreeView1_TreeNodeCheckChanged" ShowCheckBoxes="All" OnSelectedNodeChanged="TreeView1_SelectedNodeChanged"></asp:TreeView>
             </div>
 
         </div>
@@ -38,7 +38,7 @@
             </div>
         </div>
         <div class="grid_view">
-            <asp:GridView ID="GridView_Component" runat="server"></asp:GridView>
+            <asp:GridView ID="GridView1" runat="server"></asp:GridView>
         </div>
     </form>
 </body>
